@@ -72,12 +72,32 @@ API Gateaway
 Auth Service
 Hotel Service
 Reservation Service
+
 ## Deskripsi Singkat Microservices:
 Auth Service : Login dan Logout
 Hotel Service : Pengecekkan informasi kamar
 Reservation Service : Booking dan Cancel
-## Wireframe UI/UX
 
+## Wireframe UI/UX
+Merupakan Halaman dimana User mencari tipe kamar yang akan di booking, terdapat tombol login yang hanay bisa di akses oleh admin untuk masuk kedalam dashboard admin
+![Screenshot](IMG/Search%20Room.png)
+
+Merupakan Halaman ketersediaan Kamar 
+![Screenshot](IMG/Dashboard%20Admin%20(Room).png)
+
+Merupakan Halaman Detail Kamar dengan 
+![Screenshot](IMG/Detail.png)
+
+Merupakan Halaman form booking kamar yang akana di booking oleh user
+![Screenshot](IMG/Form.png)
+
+Merupakan Halaman Utama Dashboard Admin dimana admin dapat melihat total Check-In dan Out serta melihat LIst Pengunjung yang melakukan Check-In dan Out, terdapat juga tombol untuk logout agar kembali pada halaman pencari kamar hotel
+![Screenshot](IMG/Dashboard%20Admin%20(Main).png)
+
+Merupakan halaman dimana admin melihat tipe tipe kamar yang akan di cek ketersediaannya
+![Screenshot](IMG/Dashboard%20Admin%20(Room)%20(1).png)
+
+*Note: Wireframe hanya sebagai gambaran awal fungsi program, bukan hasil akhir dan mungkin akan berubah
 
 ## Struktur Awal Repository GitHub
 /hotel-reservation-system
