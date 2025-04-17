@@ -1,0 +1,19 @@
+### 1. Test Welcome Endpoint
+GET http://localhost:5001/
+
+### 2. Create Room
+POST http://localhost:5001/api/rooms
+Content-Type: application/json
+
+{
+    "room_number": "101",
+    "room_type": "Standard",
+    "price": 500000,
+    "description": "Standard room with single bed"
+}
+
+### 3. Get All Rooms
+GET http://localhost:5001/api/rooms
+
+### 4. Get Specific Room
+GET http://localhost:5001/api/rooms/3

@@ -1,4 +1,5 @@
 from . import db
+from datetime import datetime
 
 class Room(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -7,3 +8,4 @@ class Room(db.Model):
     price = db.Column(db.Float, nullable=False)
     status = db.Column(db.String(20), default='available')
     description = db.Column(db.Text)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)

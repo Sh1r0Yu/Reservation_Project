@@ -1,0 +1,16 @@
+### Test Notification Welcome
+GET http://localhost:5004/
+
+### Create Notification
+POST http://localhost:5004/api/notifications
+Content-Type: application/json
+
+{
+    "user_id": 1,
+    "reservation_id": 1,
+    "message": "Your room reservation has been confirmed",
+    "type": "booking_confirmation"
+}
+
+### Get User Notifications
+GET http://localhost:5004/api/notifications/user/1
