@@ -9,4 +9,7 @@ COPY . .
 
 EXPOSE 5003
 
-CMD ["python", "run.py"]
+
+ENV FLASK_APP=run.py
+
+CMD ["python", "-m", "flask", "run", "--host=0.0.0.0", "--port=5003"]

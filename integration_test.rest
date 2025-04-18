@@ -1,0 +1,25 @@
+### 1. Login with New User
+POST http://localhost:5002/api/auth/login
+Content-Type: application/json
+
+{
+    "username": "newuser",
+    "password": "password123"
+}
+
+### 2. Get Available Rooms
+GET http://localhost:5001/api/rooms
+
+### 3. Make Reservation
+POST http://localhost:5003/api/reservations
+Content-Type: application/json
+
+{
+    "user_id": 1,
+    "room_id": 2,
+    "check_in": "2024-04-20",
+    "check_out": "2024-04-22"
+}
+
+### 4. Check Notifications
+GET http://localhost:5004/api/notifications/user/1
