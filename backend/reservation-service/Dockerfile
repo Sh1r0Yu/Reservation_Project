@@ -3,13 +3,13 @@ FROM python:3.9-slim
 WORKDIR /app
 
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install -r requirements.txt
 
 COPY . .
 
+ENV FLASK_APP=run.py
+ENV FLASK_ENV=development
+
 EXPOSE 5003
 
-
-ENV FLASK_APP=run.py
-
-CMD ["python", "-m", "flask", "run", "--host=0.0.0.0", "--port=5003"]
+CMD ["python", "run.py"]

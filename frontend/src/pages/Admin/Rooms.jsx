@@ -1,7 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Container, Typography, Grid, Paper, Button, Table, TableBody, TableCell, 
-  TableContainer, TableHead, TableRow, CircularProgress, Alert } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { 
+  Box, 
+  Container, 
+  Typography, 
+  Paper, 
+  Button,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  CircularProgress,
+  Alert
+} from '@mui/material';
+import AdminSidebar from '../../components/shared/AdminSidebar';
 import api from '../../services/api';
 
 function Rooms() {
@@ -15,75 +28,31 @@ function Rooms() {
 
   const fetchRooms = async () => {
     try {
-      setLoading(true);
-      setError(null);
       const response = await api.getRooms();
       setRooms(response.data);
-    } catch (error) {
-      setError('Gagal mengambil data kamar: ' + error.message);
+      setError(null);
+    } catch (err) {
+      setError('Gagal memuat data kamar');
     } finally {
       setLoading(false);
     }
   };
 
+  const handleEdit = (id) => {
+    // Implementasi edit
+  };
+
   const handleDelete = async (id) => {
-    if (window.confirm('Apakah Anda yakin ingin menghapus kamar ini?')) {
-      try {
-        setLoading(true);
-        await api.deleteRoom(id);
-        await fetchRooms();
-      } catch (error) {
-        setError('Gagal menghapus kamar: ' + error.message);
-      } finally {
-        setLoading(false);
-      }
-    }
+    // Implementasi delete
   };
 
   return (
     <Box sx={{ display: 'flex' }}>
-      {/* Sidebar - menggunakan style yang sama dengan Dashboard */}
-      <Box sx={{ 
-        width: 240, 
-        bgcolor: '#1976d2',
-        minHeight: '100vh',
-        p: 3,
-        color: 'white'
-      }}>
-        <Typography variant="h6" sx={{ mb: 4, fontWeight: 'bold' }}>
-          Admin Dashboard
-        </Typography>
-        <Button
-          component={Link}
-          to="/admin/dashboard"
-          fullWidth
-          sx={{ color: 'white', mb: 2 }}
-        >
-          Dashboard
-        </Button>
-        <Button
-          component={Link}
-          to="/admin/rooms"
-          fullWidth
-          sx={{ color: 'white', mb: 2 }}
-        >
-          Rooms
-        </Button>
-        <Button
-          component={Link}
-          to="/"
-          fullWidth
-          sx={{ color: 'white', mt: 'auto' }}
-        >
-          Logout
-        </Button>
-      </Box>
-
-      {/* Main content */}
-      <Box sx={{ flexGrow: 1, p: 3 }}>
-        <Container maxWidth="lg">
+      <AdminSidebar />
+      <Box component="main" sx={{ flexGrow: 1, p: 3, bgcolor: '#f5f5f5', minHeight: '100vh' }}>
+        <Container maxWidth="lg" sx={{ mt: 4 }}>
           <Box sx={{ mb: 4, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
+            <Typography variant="h4" sx={{ fontWeight: 'bold', color: '#1976d2' }}>
               Manajemen Kamar
             </Typography>
             <Button
@@ -93,11 +62,11 @@ function Rooms() {
                 '&:hover': { bgcolor: '#1565c0' }
               }}
             >
-              Tambah Kamar
+              TAMBAH KAMAR
             </Button>
           </Box>
 
-          <Paper sx={{ p: 3 }}>
+          <Paper sx={{ p: 3, boxShadow: 3 }}>
             {error && (
               <Alert severity="error" sx={{ mb: 2 }}>
                 {error}
@@ -112,12 +81,12 @@ function Rooms() {
               <TableContainer>
                 <Table>
                   <TableHead>
-                    <TableRow>
+                    <TableRow sx={{ bgcolor: '#f5f5f5' }}>
                       <TableCell>Tipe Kamar</TableCell>
                       <TableCell>Harga/Malam</TableCell>
                       <TableCell>Total Kamar</TableCell>
                       <TableCell>Kamar Tersedia</TableCell>
-                      <TableCell>Aksi</TableCell>
+                      <TableCell align="center">Aksi</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -127,14 +96,14 @@ function Rooms() {
                         <TableCell>Rp {room.price}</TableCell>
                         <TableCell>{room.room_number}</TableCell>
                         <TableCell>{room.status}</TableCell>
-                        <TableCell>
+                        <TableCell align="center">
                           <Button
                             variant="contained"
                             size="small"
-                            sx={{ mr: 1 }}
+                            sx={{ mr: 1, bgcolor: '#1976d2', '&:hover': { bgcolor: '#1565c0' } }}
                             onClick={() => handleEdit(room.id)}
                           >
-                            Edit
+                            EDIT
                           </Button>
                           <Button
                             variant="contained"
@@ -142,7 +111,7 @@ function Rooms() {
                             size="small"
                             onClick={() => handleDelete(room.id)}
                           >
-                            Hapus
+                            HAPUS
                           </Button>
                         </TableCell>
                       </TableRow>

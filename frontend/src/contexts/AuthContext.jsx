@@ -1,45 +1,65 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { createContext, useContext, useState } from 'react';
 import api from '../services/api';
 
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [user, setUser] = useState(null);
 
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      // Set token to axios header
-      api.hotelAPI.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      api.authAPI.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      api.reservationAPI.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      setUser({ token });
-    }
-    setLoading(false);
-  }, []);
+    const login = async (credentials) => {
+        try {
+            const response = await api.login(credentials);
+            const data = response.data;
+            
+            if (data.user_id && data.role) {
+                setUser({
+                    id: data.user_id,
+                    role: data.role
+                });
+                setIsAuthenticated(true);
+                return { success: true };
+            } else {
+                return { 
+                    success: false, 
+                    error: 'Invalid response from server' 
+                };
+            }
+        } catch (error) {
+            return { 
+                success: false, 
+                error: error.response?.data?.error || 'Login failed' 
+            };
+        }
+    };
 
-  const login = async (credentials) => {
-    const response = await api.login(credentials);
-    const { token } = response.data;
-    localStorage.setItem('token', token);
-    setUser({ token });
-    navigate('/admin/dashboard');
-  };
+    const logout = async () => {
+        try {
+            await api.logout();
+        } catch (error) {
+            console.error('Logout error:', error);
+        } finally {
+            setUser(null);
+            setIsAuthenticated(false);
+        }
+    };
 
-  const logout = () => {
-    localStorage.removeItem('token');
-    setUser(null);
-    navigate('/');
-  };
-
-  return (
-    <AuthContext.Provider value={{ user, login, logout, loading }}>
-      {!loading && children}
-    </AuthContext.Provider>
-  );
+    return (
+        <AuthContext.Provider value={{ 
+            isAuthenticated, 
+            user, 
+            login, 
+            logout 
+        }}>
+            {children}
+        </AuthContext.Provider>
+    );
 };
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = () => {
+    const context = useContext(AuthContext);
+    if (!context) {
+        throw new Error('useAuth must be used within an AuthProvider');
+    }
+    return context;
+};

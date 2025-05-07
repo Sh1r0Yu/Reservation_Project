@@ -3,6 +3,8 @@ import { Box, List, ListItem, ListItemIcon, ListItemText, Drawer } from '@mui/ma
 import { Dashboard, Hotel, BookOnline, Notifications } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 
+const drawerWidth = 240;
+
 function AdminSidebar() {
   const navigate = useNavigate();
 
@@ -14,7 +16,19 @@ function AdminSidebar() {
   ];
 
   return (
-    <Drawer variant="permanent">
+    <Drawer
+      variant="permanent"
+      sx={{
+        width: drawerWidth,
+        flexShrink: 0,
+        '& .MuiDrawer-paper': {
+          width: drawerWidth,
+          boxSizing: 'border-box',
+          bgcolor: '#1976d2',
+          color: 'white'
+        }
+      }}
+    >
       <Box sx={{ width: 240, mt: 8 }}>
         <List>
           {menuItems.map((item) => (

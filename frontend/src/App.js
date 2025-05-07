@@ -7,6 +7,8 @@ import Login from './pages/Auth/Login';
 import Dashboard from './pages/Admin/Dashboard';
 import Rooms from './pages/Admin/Rooms';
 import BookingForm from './pages/Booking/BookingForm';
+import Reservations from './pages/Admin/Reservations';
+import Notifications from './pages/Admin/Notifications';
 
 function App() {
   return (
@@ -23,6 +25,16 @@ function App() {
           <Route path="/admin/rooms" element={
             <ProtectedRoute>
               <Rooms />
+            </ProtectedRoute>
+          } />
+          <Route path="/admin/reservations" element={
+            <ProtectedRoute>
+              <Reservations />
+            </ProtectedRoute>
+          } />
+          <Route path="/admin/notifications" element={
+            <ProtectedRoute>
+              <Notifications />
             </ProtectedRoute>
           } />
           <Route path="/booking/:roomId" element={<BookingForm />} />

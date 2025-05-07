@@ -7,6 +7,8 @@ const services = {
   notification: 'http://localhost:5004'
 };
 
+const RESERVATION_API = 'http://localhost:5003';
+
 const api = {
   // Hotel Service
   getRooms: () => axios.get(`${services.hotel}/api/rooms`),
@@ -14,7 +16,9 @@ const api = {
   
   // Reservation Service
   createBooking: (data) => axios.post(`${services.reservation}/api/bookings`, data),
-  getBookings: () => axios.get(`${services.reservation}/api/bookings`),
+  getBookings: () => {
+    return axios.get(`${RESERVATION_API}/api/bookings`);
+  },
   
   // Auth Service
   login: (credentials) => axios.post(`${services.auth}/api/auth/login`, credentials),

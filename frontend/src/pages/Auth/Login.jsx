@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { Box, Container, TextField, Button, Typography, Paper, Alert } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import api from '../../services/api';
+import { useAuth } from '../../contexts/AuthContext';
 
 function Login() {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [credentials, setCredentials] = useState({
     username: '',
     password: ''
@@ -24,13 +25,18 @@ function Login() {
     try {
       setLoading(true);
       setError(null);
-      const response = await api.login(credentials);
-      // Simpan token di localStorage
-      localStorage.setItem('token', response.data.token);
-      // Redirect ke dashboard
-      navigate('/admin/dashboard');
+      console.log('Attempting login with:', credentials);
+      const result = await login(credentials);
+      console.log('Login result:', result);
+      
+      if (result.success) {
+          navigate('/admin/dashboard');
+      } else {
+          setError(result.error || 'Login gagal: Username atau password salah');
+      }
     } catch (error) {
-      setError('Login gagal: ' + (error.response?.data?.message || error.message));
+      console.error('Login error:', error);
+      setError('Login gagal: ' + (error.message || 'Terjadi kesalahan'));
     } finally {
       setLoading(false);
     }

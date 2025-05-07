@@ -39,9 +39,10 @@ def create_reservation():
                 "message": f"New reservation created for Room {data['room_id']}",
                 "type": "reservation_created"
             }
-            requests.post('http://localhost:5004/api/notifications', json=notification_data)
+            # Gunakan nama service dari docker-compose
+            requests.post('http://notification-service:5004/api/notifications', json=notification_data)
         except Exception as ne:
-            print('Notification error:', str(ne))  # Non-blocking notification error
+            print('Notification error:', str(ne))
 
         return jsonify({'message': 'Reservation created', 'id': new_reservation.id}), 201
     except Exception as e:
