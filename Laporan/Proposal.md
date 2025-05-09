@@ -11,7 +11,6 @@ Manajemen pengguna
 
 
 ## Pembagian Tugas
-* [Achmad Maulana Kusnadi] - Backend Engineer(Backend: Flask, PostgreSQL)
 * [Shello Juliano Julius ] - Frontend Engineer(Frontend: React, Vite)
 * [Nurma Yulan Dari] - DevOps/Infrastructure Engineer (Infrastructure: Docker, GitHub Actions, [Google cloud])
 
