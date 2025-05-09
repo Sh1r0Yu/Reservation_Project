@@ -17,25 +17,50 @@ def get_rooms():
         'room_type': room.room_type,
         'price': room.price,
         'status': room.status,
-        'description': room.description
+        'description': room.description,
+        'total_rooms': room.total_rooms,
+        'available_rooms': room.available_rooms
     } for room in rooms])
 
 @hotel_bp.route('/api/rooms', methods=['POST'])
 def create_room():
     try:
         data = request.get_json()
+        
+        # Pastikan semua field yang diperlukan ada
+        required_fields = ['room_type', 'price', 'room_number', 'total_rooms', 'available_rooms']
+        for field in required_fields:
+            if field not in data:
+                return jsonify({'error': f'Field {field} harus diisi'}), 400
+        
+        # Buat instance Room baru
         new_room = Room(
-            room_number=data['room_number'],
             room_type=data['room_type'],
-            price=data['price'],
-            description=data.get('description', '')
+            room_number=f"R{data['total_rooms']:03d}", # Generate room number otomatis
+            price=float(data['price']),
+            total_rooms=int(data['total_rooms']),
+            available_rooms=int(data['available_rooms']),
+            status='available'
         )
+        
         db.session.add(new_room)
         db.session.commit()
-        return jsonify({'message': 'Room created successfully', 'id': new_room.id}), 201
+        
+        return jsonify({
+            'message': 'Kamar berhasil ditambahkan',
+            'room': {
+                'id': new_room.id,
+                'room_type': new_room.room_type,
+                'room_number': new_room.room_number,
+                'price': new_room.price,
+                'total_rooms': new_room.total_rooms,
+                'available_rooms': new_room.available_rooms,
+                'status': new_room.status
+            }
+        }), 201
+        
     except Exception as e:
-        print('Error:', str(e))
-        print('Traceback:', traceback.format_exc())
+        db.session.rollback()
         return jsonify({'error': str(e)}), 500
 
 @hotel_bp.route('/api/rooms/<int:room_id>', methods=['GET'])

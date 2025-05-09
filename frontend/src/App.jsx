@@ -1,4 +1,4 @@
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter, Navigate } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import ErrorBoundary from './components/ErrorBoundary';
 import { Routes, Route } from 'react-router-dom';
@@ -10,10 +10,12 @@ function App() {
     return (
         <ErrorBoundary>
             <AuthProvider>
-                <BrowserRouter future={{
+                <BrowserRouter
+                  future={{
                     v7_startTransition: true,
                     v7_relativeSplatPath: true
-                }}>
+                  }}
+                >
                     <Routes>
                         <Route path="/" element={<Navigate to="/login" />} />
                         <Route path="/login" element={<Login />} />

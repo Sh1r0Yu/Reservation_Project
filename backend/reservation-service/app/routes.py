@@ -51,6 +51,23 @@ def create_reservation():
         db.session.rollback()
         return jsonify({'error': str(e)}), 500
 
+@reservation_bp.route('/api/reservations', methods=['GET'])
+def get_reservations():
+    try:
+        reservations = Reservation.query.all()
+        return jsonify([{
+            'id': r.id,
+            'user_id': r.user_id,
+            'room_id': r.room_id,
+            'check_in': r.check_in.strftime('%Y-%m-%d'),
+            'check_out': r.check_out.strftime('%Y-%m-%d'),
+            'status': r.status
+        } for r in reservations])
+    except Exception as e:
+        print('Error:', str(e))
+        print('Traceback:', traceback.format_exc())
+        return jsonify({'error': str(e)}), 500
+
 @reservation_bp.route('/api/reservations/<int:id>', methods=['GET'])
 def get_reservation(id):
     reservation = Reservation.query.get_or_404(id)
