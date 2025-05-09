@@ -16,6 +16,22 @@
 1. Base directory: frontend
 2. Build command: npm run build
 3. Publish directory: build
+
+### Deploy
+1. Deployment otomatis berjalan setelah konfigurasi
+2. Site berhasil di-deploy dan bisa diakses
+
+### Maintenance
+1. Setiap push ke main branch akan trigger deployment baru
+2. Monitor build status di dashboard Netlify
+3. Cek deployment logs jika ada perubahan yang gagal
+4. Gunakan preview deployments untuk testing sebelum ke production
+
+### Environment Variables
+Jika nanti diperlukan, tambahkan environment variables di:
+1. Site Settings > Build & Deploy > Environment
+2. Variabel yang mungkin diperlukan:
+   - REACT_APP_API_URL: URL backend API
 4. Tambahkan file netlify.toml di root project
 
 ### 3. Deploy

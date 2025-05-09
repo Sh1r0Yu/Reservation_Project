@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import '../../styles/SearchRoom.css';
 import { useNavigate } from 'react-router-dom';
 import api from '../../services/api';
 import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button } from '@mui/material';
@@ -76,14 +77,41 @@ function SearchRoom() {
   const handleBookingSubmit = async (e) => {
     e.preventDefault();
     try {
+      // Validasi form
+      if (!bookingData.name || !bookingData.email || !bookingData.phone || 
+          !bookingData.checkIn || !bookingData.checkOut) {
+        throw new Error('Semua field harus diisi');
+      }
+
+      // Validasi format email
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(bookingData.email)) {
+        throw new Error('Format email tidak valid');
+      }
+
+      // Validasi tanggal
+      const checkIn = new Date(bookingData.checkIn);
+      const checkOut = new Date(bookingData.checkOut);
+      if (checkOut <= checkIn) {
+        throw new Error('Tanggal check-out harus setelah check-in');
+      }
+
       await api.createBooking({
         ...bookingData,
         roomId: selectedRoom.id
       });
+      
+      // Tampilkan pesan sukses
       alert('Booking berhasil!');
       handleCloseModal();
+      
     } catch (error) {
-      alert('Gagal melakukan booking: ' + error.message);
+      // Tampilkan pesan error yang lebih informatif
+      const errorMessage = error.response?.data?.message || error.message || 'Terjadi kesalahan saat booking';
+      alert('Gagal melakukan booking: ' + errorMessage);
+      
+      // Log error untuk debugging
+      console.error('Booking error:', error);
     }
   };
 
@@ -92,7 +120,13 @@ function SearchRoom() {
       {/* Navbar */}
       <nav className="navbar navbar-expand-lg navbar-light bg-white fixed-top shadow-sm">
         <div className="container">
-          <a className="navbar-brand" href="/">Hotel Reservation</a>
+          <a className="navbar-brand" href="/" style={{ 
+            fontSize: '1.5rem', 
+            fontWeight: 'bold',
+            color: '#1976d2'
+          }}>
+            Hotel Reservation
+          </a>
           <button 
             className="navbar-toggler" 
             type="button" 
@@ -182,7 +216,8 @@ function SearchRoom() {
         height: '100vh',
         width: '100%',
         position: 'relative',
-        overflow: 'hidden' // Menambahkan overflow hidden
+        overflow: 'hidden',
+        marginTop: '76px' // Menambahkan margin untuk navbar fixed
       }}>
         {/* Overlay gelap */}
         <div style={{
@@ -222,7 +257,8 @@ function SearchRoom() {
             boxShadow: '0 8px 25px rgba(0,0,0,0.2)',
             width: '100%',
             maxWidth: '1000px',
-            backdropFilter: 'blur(10px)'
+            backdropFilter: 'blur(10px)',
+            animation: 'fadeIn 0.5s ease-in-out'
           }}>
             <div className="row g-4">
               <div className="col-md-3">
@@ -321,11 +357,18 @@ function SearchRoom() {
       </div>
 
       {/* Room Section */}
-      <div style={{ padding: '5rem 0', backgroundColor: '#fff' }}>
+      <div style={{ padding: '5rem 0', backgroundColor: '#f8f9fa' }}>
         <div className="container">
           <div className="row mb-5">
             <div className="col-md-12 text-center">
-              <h2 className="font-weight-bold text-black mb-3" data-aos="fade-up">Our Rooms</h2>
+              <h2 className="font-weight-bold text-black mb-3" 
+                style={{
+                  fontSize: '2.5rem',
+                  color: '#1976d2'
+                }}
+              >
+                Our Rooms
+              </h2>
               <p className="text-muted" data-aos="fade-up" data-aos-delay="100">
                 Choose from our comfortable and luxurious rooms
               </p>
@@ -334,21 +377,23 @@ function SearchRoom() {
           <div className="row">
             {rooms.map((room, index) => (
               <div className="col-md-6 col-lg-4 mb-5" key={room.id} 
-                   data-aos="fade-up" 
-                   data-aos-delay={index * 100}>
+                data-aos="fade-up" 
+                data-aos-delay={index * 100}
+              >
                 <div className="hotel-room bg-white rounded-lg shadow-sm overflow-hidden"
-                     style={{
-                       transition: 'all 0.3s ease',
-                       cursor: 'pointer'
-                     }}
-                     onMouseOver={(e) => {
-                       e.currentTarget.style.transform = 'translateY(-10px)';
-                       e.currentTarget.style.boxShadow = '0 15px 30px rgba(0,0,0,0.1)';
-                     }}
-                     onMouseOut={(e) => {
-                       e.currentTarget.style.transform = 'translateY(0)';
-                       e.currentTarget.style.boxShadow = '0 5px 15px rgba(0,0,0,0.05)';
-                     }}>
+                  style={{
+                    transition: 'all 0.3s ease',
+                    cursor: 'pointer',
+                    border: '1px solid #eee'
+                  }}
+                  onMouseOver={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-10px)';
+                    e.currentTarget.style.boxShadow = '0 15px 30px rgba(0,0,0,0.1)';
+                  }}
+                  onMouseOut={(e) => {
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.boxShadow = '0 5px 15px rgba(0,0,0,0.05)';
+                  }}>
                   <div className="position-relative">
                     <img 
                       src={`/images/img_${room.id}.jpg`} 
@@ -517,6 +562,12 @@ function SearchRoom() {
         onClose={handleCloseModal}
         maxWidth="md"
         fullWidth
+        PaperProps={{
+          style: {
+            borderRadius: '15px',
+            padding: '20px'
+          }
+        }}
       >
         <DialogTitle>
           Booking Kamar {selectedRoom?.room_type}
