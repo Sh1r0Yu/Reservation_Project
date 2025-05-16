@@ -1,0 +1,68 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: hotel_db
+      POSTGRES_USER: student
+      POSTGRES_PASSWORD: 12345
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  auth-service:
+    build: ./backend/auth-service
+    ports:
+      - "5002:5002"
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=postgresql://student:12345@db:5432/hotel_db
+
+  hotel-service:
+    build: ./backend/hotel-service
+    ports:
+      - "5001:5001"
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=postgresql://student:12345@db:5432/hotel_db
+
+  reservation-service:
+    build: ./backend/reservation-service
+    ports:
+      - "5003:5003"
+    depends_on:
+      - db
+      - notification-service
+    environment:
+      - DATABASE_URL=postgresql://student:12345@db:5432/hotel_db
+
+  notification-service:
+    build: ./backend/notification-service
+    ports:
+      - "5004:5004"
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=postgresql://student:12345@db:5432/hotel_db
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - auth-service
+      - hotel-service
+      - reservation-service
+      - notification-service
+    environment:
+      - REACT_APP_AUTH_URL=http://auth-service:5002
+      - REACT_APP_HOTEL_URL=http://hotel-service:5001
+      - REACT_APP_RESERVATION_URL=http://reservation-service:5003
+      - REACT_APP_NOTIFICATION_URL=http://notification-service:5004
+
+volumes:
+  postgres_data:
