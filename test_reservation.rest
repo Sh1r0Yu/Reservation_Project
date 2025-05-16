@@ -1,0 +1,27 @@
+### Test Welcome
+GET http://localhost:5003/
+
+### 2. Create New Reservation
+POST http://localhost:5003/api/reservations
+Content-Type: application/json
+
+{
+    "user_id": 1,
+    "room_id": 1,
+    "check_in": "2024-04-20",
+    "check_out": "2024-04-22"
+}
+
+### 3. Get Reservation by ID
+GET http://localhost:5003/api/reservations/1
+
+### 4. Get User's Reservations
+GET http://localhost:5003/api/reservations/user/1
+
+### 5. Update Reservation Status
+PUT http://localhost:5003/api/reservations/1/status
+Content-Type: application/json
+
+{
+    "status": "confirmed"
+}

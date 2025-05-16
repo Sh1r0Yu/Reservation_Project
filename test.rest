@@ -1,0 +1,58 @@
+### Test home endpoint
+GET http://localhost:5003/
+
+### Get all reservations for specific user
+GET http://localhost:5003/api/reservations/user/1
+
+### Create new reservation
+### Test Reservation Service
+POST http://localhost:5003/api/reservations
+Content-Type: application/json
+
+{
+    "user_id": 1,
+    "room_id": 101,
+    "check_in": "2024-05-10",
+    "check_out": "2024-05-12"
+}
+
+### Get specific reservation by ID
+GET http://localhost:5003/api/reservations/1
+
+### Update reservation status
+PUT http://localhost:5003/api/reservations/1/status
+Content-Type: application/json
+
+{
+    "status": "confirmed"
+}
+
+
+### Test Auth Service
+POST http://localhost:5002/api/auth/register
+Content-Type: application/json
+
+{
+    "username": "testuser",
+    "email": "test@example.com",
+    "password": "password123"
+}
+
+
+### Test Hotel Service
+GET http://localhost:5001/api/rooms
+
+### Add New Room
+POST http://localhost:5001/api/rooms
+Content-Type: application/json
+
+{
+    "room_number": "101",
+    "room_type": "Deluxe",
+    "price": 1000000,
+    "status": "available"
+}
+
+
+### Test Notification Service
+GET http://localhost:5004/api/notifications/user/1
