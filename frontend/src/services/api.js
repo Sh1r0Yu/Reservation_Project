@@ -1,10 +1,10 @@
 import axios from 'axios';
 
 const services = {
-  hotel: 'http://localhost:5001',
-  auth: 'http://localhost:5002',
-  reservation: 'http://localhost:5003',
-  notification: 'http://localhost:5004'
+  hotel: process.env.REACT_APP_HOTEL_URL || 'http://localhost:5001',
+  auth: process.env.REACT_APP_AUTH_URL || 'http://localhost:5002',
+  reservation: process.env.REACT_APP_RESERVATION_URL || 'http://localhost:5003',
+  notification: process.env.REACT_APP_NOTIFICATION_URL || 'http://localhost:5004'
 };
 
 const api = {
