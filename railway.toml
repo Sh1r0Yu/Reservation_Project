@@ -2,8 +2,7 @@
 builder = "nixpacks"
 
 [deploy]
-startCommand = "npm start"
+startCommand = "npm run build && npx serve -s build"
 healthcheckPath = "/"
 healthcheckTimeout = 100
 restartPolicy = "always"
-restartPolicyMaxRetries = 10
