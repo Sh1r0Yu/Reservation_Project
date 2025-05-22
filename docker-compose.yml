@@ -7,10 +7,10 @@ services:
       POSTGRES_DB: hotel_db
       POSTGRES_USER: student
       POSTGRES_PASSWORD: 12345
+
     ports:
       - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
+    # Remove volumes section here
 
   auth-service:
     build: ./backend/auth-service
@@ -64,5 +64,4 @@ services:
       - REACT_APP_RESERVATION_URL=http://reservation-service:5003
       - REACT_APP_NOTIFICATION_URL=http://notification-service:5004
 
-volumes:
-  postgres_data:
+# Remove the volumes section at the bottom
