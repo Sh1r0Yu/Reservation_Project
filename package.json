@@ -5,6 +5,7 @@
     "@mui/material": "^7.1.0",
     "framer-motion": "^12.10.4",
     "react-parallax": "^3.5.2",
-    "react-spring": "^9.7.5"
+    "react-spring": "^9.7.5",
+    "serve": "^14.2.4"
   }
 }
