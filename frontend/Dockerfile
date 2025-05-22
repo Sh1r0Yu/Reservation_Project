@@ -5,11 +5,13 @@ WORKDIR /app
 
 COPY package*.json ./
 
-RUN npm install
+# Install dependencies
+RUN npm ci
 
 COPY . .
 
-RUN npm run build
+# Build the application
+RUN CI=false npm run build
 
 # Production stage
 FROM node:16-alpine
@@ -20,6 +22,6 @@ RUN npm install -g serve
 
 COPY --from=builder /app/build ./build
 
-ENV PORT=3000
+EXPOSE 3000
 
 CMD ["serve", "-s", "build", "-l", "3000"]
