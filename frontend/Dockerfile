@@ -1,4 +1,5 @@
-FROM node:16-alpine
+# Build stage
+FROM node:16-alpine as builder
 
 WORKDIR /app
 
@@ -10,12 +11,15 @@ COPY . .
 
 RUN npm run build
 
-ENV PORT=3000
+# Production stage
+FROM node:16-alpine
+
+WORKDIR /app
 
 RUN npm install -g serve
 
-CMD ["serve", "-s", "build", "-l", "${PORT}"]
-EXPOSE 3000
+COPY --from=builder /app/build ./build
 
 ENV PORT=3000
-CMD ["npm", "start", "--port", "${PORT}"]
+
+CMD ["serve", "-s", "build", "-l", "3000"]
