@@ -3,15 +3,20 @@ FROM node:16-alpine as builder
 
 WORKDIR /app
 
+# Copy package files first for better caching
 COPY package*.json ./
 
 # Install dependencies
-RUN npm ci
+RUN npm install
 
+# Copy the rest of the application
 COPY . .
 
+# Set CI=false to prevent treating warnings as errors
+ENV CI=false
+
 # Build the application
-RUN CI=false npm run build
+RUN npm run build
 
 # Production stage
 FROM node:16-alpine
