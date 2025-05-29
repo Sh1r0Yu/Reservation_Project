@@ -33,7 +33,7 @@ POST http://localhost:5002/api/auth/register
 Content-Type: application/json
 
 {
-    "username": "testuser",
+    "username": "testusrs",
     "email": "test@example.com",
     "password": "password123"
 }
