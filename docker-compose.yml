@@ -7,47 +7,65 @@ services:
       POSTGRES_DB: hotel_db
       POSTGRES_USER: student
       POSTGRES_PASSWORD: 12345
-
     ports:
       - "5432:5432"
-    # Remove volumes section here
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U student -d hotel_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app-network
 
   auth-service:
     build: ./backend/auth-service
     ports:
       - "5002:5002"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     environment:
       - DATABASE_URL=postgresql://student:12345@db:5432/hotel_db
+    networks:
+      - app-network
 
   hotel-service:
     build: ./backend/hotel-service
     ports:
       - "5001:5001"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     environment:
       - DATABASE_URL=postgresql://student:12345@db:5432/hotel_db
+    networks:
+      - app-network
 
   reservation-service:
     build: ./backend/reservation-service
     ports:
       - "5003:5003"
     depends_on:
-      - db
-      - notification-service
+      db:
+        condition: service_healthy
+      notification-service:
+        condition: service_started
     environment:
       - DATABASE_URL=postgresql://student:12345@db:5432/hotel_db
+    networks:
+      - app-network
 
   notification-service:
     build: ./backend/notification-service
     ports:
       - "5004:5004"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     environment:
       - DATABASE_URL=postgresql://student:12345@db:5432/hotel_db
+    networks:
+      - app-network
 
   frontend:
     build: ./frontend
@@ -64,4 +82,58 @@ services:
       - REACT_APP_RESERVATION_URL=http://reservation-service:5003
       - REACT_APP_NOTIFICATION_URL=http://notification-service:5004
 
-# Remove the volumes section at the bottom
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus:/etc/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    networks:
+      - app-network
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3001:3000"
+    volumes:
+      - ./grafana:/var/lib/grafana
+    depends_on:
+      - prometheus
+
+  elasticsearch:
+    image: elasticsearch:7.9.3
+    environment:
+      - discovery.type=single-node
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - ./elasticsearch_data:/usr/share/elasticsearch/data
+
+  logstash:
+    image: logstash:7.9.3
+    ports:
+      - "5000:5000"
+      - "9600:9600"
+    volumes:
+      - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml
+      - ./logstash/pipeline:/usr/share/logstash/pipeline
+    depends_on:
+      - elasticsearch
+
+  kibana:
+    image: kibana:7.9.3
+    ports:
+      - "5601:5601"
+    environment:
+      - ELASTICSEARCH_URL=http://elasticsearch:9200
+    depends_on:
+      - elasticsearch
+
+# Tambahkan definisi network di bagian bawah file
+networks:
+  app-network:
+    driver: bridge
