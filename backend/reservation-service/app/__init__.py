@@ -5,8 +5,10 @@ from prometheus_client import Counter, Histogram, make_wsgi_app
 from werkzeug.middleware.dispatcher import DispatcherMiddleware
 import time
 import logging
+import logging.handlers
 import json
 import socket
+from logging.handlers import SocketHandler
 
 db = SQLAlchemy()
 
@@ -19,7 +21,7 @@ logger = logging.getLogger('reservation-service')
 logger.setLevel(logging.INFO)
 
 # Create TCP handler for Logstash
-tcp_handler = logging.handlers.SocketHandler('logstash', 5000)
+tcp_handler = SocketHandler('logstash', 5000)
 tcp_handler.setFormatter(logging.Formatter('%(message)s'))
 logger.addHandler(tcp_handler)
 

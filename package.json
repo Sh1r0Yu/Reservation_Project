@@ -7,5 +7,9 @@
     "react-parallax": "^3.5.2",
     "react-spring": "^9.7.5",
     "serve": "^14.2.4"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build"
   }
 }
