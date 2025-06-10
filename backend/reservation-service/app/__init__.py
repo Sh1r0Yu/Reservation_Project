@@ -5,10 +5,9 @@ from prometheus_client import Counter, Histogram, make_wsgi_app
 from werkzeug.middleware.dispatcher import DispatcherMiddleware
 import time
 import logging
-import logging.handlers
+from logging.handlers import SocketHandler
 import json
 import socket
-from logging.handlers import SocketHandler
 
 db = SQLAlchemy()
 
