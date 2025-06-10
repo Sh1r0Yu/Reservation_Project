@@ -104,8 +104,6 @@
     autoplay: true,
     stagePadding: 7,
     margin: 20,
-    // animateOut: 'fadeOut',
-    // animateIn: 'fadeIn',
     nav: true,
     autoplayHoverPause: true,
     autoHeight: true,
@@ -128,18 +126,6 @@
       }
   	}
 	});
-
-  var siteStellar = function() {
-    $(window).stellar({
-      responsive: false,
-      parallaxBackgrounds: true,
-      parallaxElements: true,
-      horizontalScrolling: false,
-      hideDistantElements: false,
-      scrollProperty: 'scroll'
-    });
-  }
-  siteStellar();
 
   var smoothScroll = function() {
     var $root = $('html, body');

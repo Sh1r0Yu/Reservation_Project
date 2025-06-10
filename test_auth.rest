@@ -6,9 +6,9 @@ POST http://localhost:5002/api/auth/register
 Content-Type: application/json
 
 {
-    "username": "testuser",
-    "password": "password123",
-    "role": "user"
+    "username": "admin@hotel.com",
+    "password": "admin123",
+    "role": "admin"
 }
 
 ### Login User
@@ -16,6 +16,6 @@ POST http://localhost:5002/api/auth/login
 Content-Type: application/json
 
 {
-    "username": "testuser",
-    "password": "password123"
+    "username": "admin@hotel.com",
+    "password": "admin123"
 }

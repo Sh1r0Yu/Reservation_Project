@@ -4,12 +4,24 @@ from flask_cors import CORS
 from prometheus_client import Counter, Histogram, make_wsgi_app
 from werkzeug.middleware.dispatcher import DispatcherMiddleware
 import time
+import logging
+import json
+import socket
 
 db = SQLAlchemy()
 
 # Define metrics
 REQUEST_COUNT = Counter('hotel_request_total', 'Total number of requests to hotel service', ['method', 'endpoint', 'status'])
 REQUEST_LATENCY = Histogram('hotel_request_latency_seconds', 'Request latency in seconds', ['endpoint'])
+
+# Configure logging
+logger = logging.getLogger('hotel-service')
+logger.setLevel(logging.INFO)
+
+# Create TCP handler for Logstash
+tcp_handler = logging.handlers.SocketHandler('logstash', 5000)
+tcp_handler.setFormatter(logging.Formatter('%(message)s'))
+logger.addHandler(tcp_handler)
 
 def create_app():
     app = Flask(__name__)
@@ -38,6 +50,19 @@ def create_app():
                 endpoint=request.path,
                 status=response.status_code
             ).inc()
+            
+            # Log request details
+            log_data = {
+                'service': 'hotel-service',
+                'timestamp': time.strftime('%Y-%m-%d %H:%M:%S'),
+                'method': request.method,
+                'endpoint': request.path,
+                'status': response.status_code,
+                'latency': latency,
+                'ip': request.remote_addr
+            }
+            logger.info(json.dumps(log_data))
+            
         return response
     
     from .routes import hotel_bp
