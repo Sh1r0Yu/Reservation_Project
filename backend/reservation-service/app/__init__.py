@@ -4,8 +4,6 @@ from flask_cors import CORS
 from prometheus_client import Counter, Histogram, make_wsgi_app
 from werkzeug.middleware.dispatcher import DispatcherMiddleware
 import time
-import logging
-from logging.handlers import SocketHandler
 import json
 import socket
 
@@ -19,10 +17,6 @@ REQUEST_LATENCY = Histogram('reservation_request_latency_seconds', 'Request late
 logger = logging.getLogger('reservation-service')
 logger.setLevel(logging.INFO)
 
-# Create TCP handler for Logstash
-tcp_handler = SocketHandler('logstash', 5000)
-tcp_handler.setFormatter(logging.Formatter('%(message)s'))
-logger.addHandler(tcp_handler)
 
 def create_app():
     app = Flask(__name__)
