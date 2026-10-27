@@ -43,11 +43,10 @@ Sistem terdiri dari beberapa microservices:
 - PostgreSQL
 - VS Code + REST Client extension (opsional)
 
-### Database Setup
-1. Install PostgreSQL
-2. Create database: hotel_db
-3. User: student
-4. Password: 12345
+### Konfigurasi Environment
+1. Salin `.env.example` menjadi `.env`
+2. Isi `POSTGRES_PASSWORD` dengan password pilihanmu
+3. Jalankan `docker compose up --build`
 
 ### Local Development
 1. Clone repository

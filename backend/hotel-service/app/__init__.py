@@ -1,3 +1,4 @@
+import os
 from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
@@ -26,7 +27,7 @@ logger.addHandler(tcp_handler)
 def create_app():
     app = Flask(__name__)
     # Gunakan nama service 'db' sesuai docker-compose
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://student:12345@db:5432/hotel_db'
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
     
     CORS(app)
     db.init_app(app)
